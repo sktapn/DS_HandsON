@@ -356,7 +356,7 @@ st.markdown("""
 # Sidebar para Filtros e Controles
 # ----------------------------------------------------------
 with st.sidebar:
-    st.image("C:\\Users\\neres\\PycharmProjects\\OpenCV_Teste\\Brasão_da_UFRR.png")
+    st.image("C:\\Users\\Alunos\\Desktop\\Entregavel\\Brasão_da_UFRR.png")
     st.title(f"{nutrition_icons['main']} Controle de Dados")
     st.markdown('<div style="border-bottom: 1px solid #e9ecef; margin-bottom: 20px;"></div>', unsafe_allow_html=True)
 
@@ -881,140 +881,114 @@ with tabs[4]:
     st.markdown('<div class="sub-header">Predição da Qualidade da Alimentação</div>', unsafe_allow_html=True)
 
 
+   # Função para carregar o modelo treinado
     @st.cache_resource
-    def load_model_new():
+    def load_model():
         with open("modelo_alimentos_basicos.pkl", "rb") as f:
             model = pickle.load(f)
         return model
-
-
-    model_new = load_model_new()
-
-    st.subheader("🤖 Fazer uma Predição")
+    
+    modelo = load_model()
 
     idade = st.number_input("Idade da Criança", value=0)
     nome = st.text_input("Nome da Criança:", value="")
+
     idade_meses = st.number_input("Idade em Meses", value=0)
     selecao_regiao = st.selectbox("Região em que moram", ["Norte", "Nordeste", "Sudeste", "Sul", "Centro-Oeste"])
     selecao_sexo = st.selectbox("Sexo da criança", ["Masculino", "Feminino"])
     selecao_domicilio = st.selectbox("Domicílio", ["Casa", "Apartamento", "Outros"])
     selecao_cozinha = st.selectbox("Possui Cozinha", ["Sim", "Não"])
-    selecao_ocupacao = st.selectbox("Ocupação",
-                                    ["Próprio de algum morador - já pago", "Próprio de algum morador - ainda pagando",
-                                     "Alugado", "Cedido por empregador", "Cedido de outra forma", "Outra condição"])
+    selecao_ocupacao = st.selectbox("Ocupação", ["Próprio de algum morador - já pago", "Próprio de algum morador - ainda pagando", "Alugado", "Cedido por empregador", "Cedido de outra forma", "Outra condição"])
     selecao_registro = st.selectbox("Situação do Registro", ["Urbano", "Rural"])
     selecao_tosse = st.selectbox("Presença de Tosse", ["Sim", "Não", "Não sabe/ não quis responder"])
     selecao_respiracao = st.selectbox("Tipo de Respiração", ["Sim", "Não", "Não sabe/ não quis responder"])
-    selecao_escolaridade = st.selectbox("Nível Escolaridade dos pais", [
-        "Sem estudo", "1° ano do ensino fundamental", "1ª série/ 2°ano do ensino fundamental",
-        "2ª série/ 3°ano do ensino fundamental", "3ª série/ 4°ano do ensino fundamental",
-        "4ª série/ 5°ano do ensino fundamental", "5ª série/ 6°ano do ensino fundamental",
-        "6ª série/ 7°ano do ensino fundamental", "7ª série/ 8°ano do ensino fundamental",
-        "8ª série/ 9°ano do ensino fundamental", "1°ano do ensino médio", "2°ano do ensino médio",
-        "3°ano do ensino médio", "Ensino superior incompleto", "Ensino superior completo"
-    ])
-    selecao_renda = st.selectbox("Faixa de Renda da casa", [
-        "Sem renda", "Até R$ 1.000,00", "De R$ 1.001,00 até R$ 2.000,00",
-        "De R$ 2.001,00 até R$ 3.000,00", "De R$ 3.001,00 até R$ 5.000,00",
-        "De R$ 5.001,00 até R$ 10.000,00", "R$ 10.001,00 ou mais"
-    ])
-    selecao_cor_pessoa = st.selectbox("Cor da criança", [
-        "Branca", "Preta", "Amarela (origem japonesa, chinesa, coreana etc.)",
-        "Parda (mulata, cabocla, cafuza, mameluca ou mestiça)", "Indígena", "Não sabe/não quis responder"
-    ])
+    selecao_escolaridade = st.selectbox("Nível Escolaridade dos pais", ["Sem estudo", "1° ano do ensino fundamental", "1ª série/ 2°ano do ensino fundamental",
+                                                                "2ª série/ 3°ano do ensino fundamental", "3ª série/ 4°ano do ensino fundamental", 
+                                                                "4ª série/ 5°ano do ensino fundamental", "5ª série/ 6°ano do ensino fundamental", 
+                                                                "6ª série/ 7°ano do ensino fundamental", "7ª série/ 8°ano do ensino fundamental", 
+                                                                "8ª série/ 9°ano do ensino fundamental", "1°ano do ensino médio", "2°ano do ensino médio", 
+                                                                "3°ano do ensino médio", "Ensino superior incompleto", "Ensino superior completo"])
+    selecao_renda = st.selectbox("Faixa de Renda da casa", ["Sem renda", "Até R$ 1.000,00", "De R$ 1.001,00 até R$ 2.000,00", "De R$ 2.001,00 até R$ 3.000,00", 
+                                                    "De R$ 3.001,00 até R$ 5.000,00", "De R$ 5.001,00 até R$ 10.000,00", "R$ 10.001,00 ou mais"])
+    # Adicionar as features faltantes no dashboard
+    selecao_cor_pessoa = st.selectbox("Cor da criança", ["Branca", "Preta", "Amarela (origem japonesa, chinesa, coreana etc.)", 
+                                                    "Parda (mulata, cabocla, cafuza, mameluca ou mestiça)", 
+                                                    "Indígena", "Não sabe/não quis responder"])
+
     selecao_moradores_alimentaram_sim = st.selectbox("Moradores que Alimentaram Acabamento (Sim)", ["Sim", "Não"])
+
     selecao_moradores_alimentaram_nao = st.selectbox("Moradores que Alimentaram Acabamento (Não)", ["Sim", "Não"])
 
-    beneficios_opcoes = [
-        "Programa Bolsa Família (PBF)", "Benefício de Prestação Continuada (BPC/LOAS)",
-        "Bolsa ou benefício da Prefeitura Municipal", "Bolsa ou benefício do Governo do Estado",
-        "Pensão", "Aposentadoria", "Outro benefício"
-    ]
+
+    beneficios_opcoes = ["Programa Bolsa Família (PBF)", "Benefício de Prestação Continuada (BPC/LOAS)", "Bolsa ou benefício da Prefeitura Municipal", 
+                         "Bolsa ou benefício do Governo do Estado", "Pensão", "Aposentadoria", "Outro benefício"]
     beneficios_selecionados = st.multiselect("Benefícios recebidos", beneficios_opcoes)
     beneficios_mapping = {
-        "Programa Bolsa Família (PBF)": "A",
-        "Benefício de Prestação Continuada (BPC/LOAS)": "B",
-        "Bolsa ou benefício da Prefeitura Municipal": "C",
-        "Bolsa ou benefício do Governo do Estado": "D",
-        "Pensão": "E",
-        "Aposentadoria": "F",
-        "Outro benefício": "G"
+    "Programa Bolsa Família (PBF)": "A",
+    "Benefício de Prestação Continuada (BPC/LOAS)": "B",
+    "Bolsa ou benefício da Prefeitura Municipal": "C",
+    "Bolsa ou benefício do Governo do Estado": "D",
+    "Pensão": "E",
+    "Aposentadoria": "F",
+    "Outro benefício": "G"
     }
+
     beneficios_input = [1 if beneficios_mapping[ben] in beneficios_selecionados else 0 for ben in beneficios_opcoes]
     total_beneficios = len(beneficios_selecionados)
 
-    mapping = {
-        "Região": {"Norte": 1, "Nordeste": 2, "Sudeste": 3, "Sul": 4, "Centro-Oeste": 5},
-        "Sexo": {"Masculino": 1, "Feminino": 2},
-        "Domicílio": {"Casa": 1, "Apartamento": 2, "Outros": 3},
-        "Cozinha": {"Sim": 1, "Não": 0},
-        "Ocupação": {
-            "Próprio de algum morador - já pago": 1,
-            "Próprio de algum morador - ainda pagando": 2,
-            "Alugado": 3,
-            "Cedido por empregador": 4,
-            "Cedido de outra forma": 5,
-            "Outra condição": 6
-        },
-        "Registro": {"Urbano": 1, "Rural": 2},
-        "Tosse": {"Sim": 1, "Não": 2, "Não sabe/ não quis responder": 9},
-        "Respiração": {"Sim": 1, "Não": 2, "Não sabe/ não quis responder": 9},
-        "Escolaridade": {
-            "Sem estudo": 0,
-            "1° ano do ensino fundamental": 1,
-            "1ª série/ 2°ano do ensino fundamental": 2,
-            "2ª série/ 3°ano do ensino fundamental": 3,
-            "3ª série/ 4°ano do ensino fundamental": 4,
-            "4ª série/ 5°ano do ensino fundamental": 5,
-            "5ª série/ 6°ano do ensino fundamental": 6,
-            "6ª série/ 7°ano do ensino fundamental": 7,
-            "7ª série/ 8°ano do ensino fundamental": 8,
-            "8ª série/ 9°ano do ensino fundamental": 9,
-            "1°ano do ensino médio": 10,
-            "2°ano do ensino médio": 11,
-            "3°ano do ensino médio": 12,
-            "Ensino superior incompleto": 13,
-            "Ensino superior completo": 14
-        },
-        "Renda": {
-            "Sem renda": 1,
-            "Até R$ 1.000,00": 2,
-            "De R$ 1.001,00 até R$ 2.000,00": 3,
-            "De R$ 2.001,00 até R$ 3.000,00": 4,
-            "De R$ 3.001,00 até R$ 5.000,00": 5,
-            "De R$ 5.001,00 até R$ 10.000,00": 6,
-            "R$ 10.001,00 ou mais": 7
-        }
-    }
+    mapping = {"Região": {"Norte": 1, "Nordeste": 2, "Sudeste": 3, "Sul": 4, "Centro-Oeste": 5}, "Sexo": {"Masculino": 1, "Feminino": 2}, 
+               "Domicílio": {"Casa": 1, "Apartamento": 2, "Outros": 3}, "Cozinha": {"Sim": 1, "Não": 0}, "Ocupação": {"Próprio de algum morador - já pago": 1, "Próprio de algum morador - ainda pagando": 2, 
+               "Alugado": 3, "Cedido por empregador": 4, "Cedido de outra forma": 5, "Outra condição" : 6}, "Registro": {"Urbano": 1, "Rural": 2}, 
+               "Tosse": {"Sim": 1, "Não": 2, "Não sabe/ não quis responder": 9}, "Respiração": {"Sim": 1, "Não": 2, "Não sabe/ não quis responder": 9}, 
+               "Escolaridade": {"Sem estudo": 0,
+               "1° ano do ensino fundamental": 1,
+               "1ª série/ 2°ano do ensino fundamental": 2,
+               "2ª série/ 3°ano do ensino fundamental": 3,
+               "3ª série/ 4°ano do ensino fundamental": 4,
+               "4ª série/ 5°ano do ensino fundamental": 5,
+               "5ª série/ 6°ano do ensino fundamental": 6,
+               "6ª série/ 7°ano do ensino fundamental": 7,
+               "7ª série/ 8°ano do ensino fundamental": 8,
+               "8ª série/ 9°ano do ensino fundamental": 9,
+               "1°ano do ensino médio": 10,
+               "2°ano do ensino médio": 11,
+               "3°ano do ensino médio": 12,
+               "Ensino superior incompleto": 13,
+               "Ensino superior completo": 14}, "Renda": {"Sem renda": 1, "Até R$ 1.000,00": 2, "De R$ 1.001,00 até R$ 2.000,00": 3,
+               "De R$ 2.001,00 até R$ 3.000,00": 4, "De R$ 3.001,00 até R$ 5.000,00": 5,
+               "De R$ 5.001,00 até R$ 10.000,00": 6, "R$ 10.001,00 ou mais": 7}}
     mapping_cor_pessoa = {
-        "Branca": 1,
-        "Preta": 2,
-        "Amarela (origem japonesa, chinesa, coreana etc.)": 3,
-        "Parda (mulata, cabocla, cafuza, mameluca ou mestiça)": 4,
-        "Indígena": 5,
-        "Não sabe/não quis responder": 9
+    "Branca": 1,
+    "Preta": 2,
+    "Amarela (origem japonesa, chinesa, coreana etc.)": 3,
+    "Parda (mulata, cabocla, cafuza, mameluca ou mestiça)": 4,
+    "Indígena": 5,
+    "Não sabe/não quis responder": 9
     }
-    mapping_sim_nao = {"Sim": 1, "Não": 2}
+
+    mapping_sim_nao = {
+        "Sim": 1, 
+        "Não": 2
+    }
 
     input_data = [
-                     idade,
-                     idade_meses,
-                     mapping["Região"][selecao_regiao],
-                     mapping["Sexo"][selecao_sexo],
-                     mapping["Domicílio"][selecao_domicilio],
-                     mapping["Cozinha"][selecao_cozinha],
-                     mapping["Ocupação"][selecao_ocupacao],
-                     mapping["Registro"][selecao_registro],
-                     mapping["Tosse"][selecao_tosse],
-                     mapping["Respiração"][selecao_respiracao],
-                     mapping["Escolaridade"][selecao_escolaridade],
-                     mapping["Renda"][selecao_renda]
-                 ] + beneficios_input + [
-                     total_beneficios,
-                     mapping_cor_pessoa[selecao_cor_pessoa],
-                     mapping_sim_nao[selecao_moradores_alimentaram_sim],
-                     mapping_sim_nao[selecao_moradores_alimentaram_nao]
-                 ]
+        idade, idade_meses,
+        mapping["Região"][selecao_regiao], 
+        mapping["Sexo"][selecao_sexo], 
+        mapping["Domicílio"][selecao_domicilio], 
+        mapping["Cozinha"][selecao_cozinha], 
+        mapping["Ocupação"][selecao_ocupacao], 
+        mapping["Registro"][selecao_registro], 
+        mapping["Tosse"][selecao_tosse], 
+        mapping["Respiração"][selecao_respiracao], 
+        mapping["Escolaridade"][selecao_escolaridade], 
+        mapping["Renda"][selecao_renda]
+    ] + beneficios_input + [
+        total_beneficios,  # Adiciona total de benefícios
+        mapping_cor_pessoa[selecao_cor_pessoa],  # Adiciona cor pessoa
+        mapping_sim_nao[selecao_moradores_alimentaram_sim],  # Moradores alimentaram acabamento SIM
+        mapping_sim_nao[selecao_moradores_alimentaram_nao]   # Moradores alimentaram acabamento NÃO
+    ]
 
     mapping_alimentos_reverse = {
         1: "Não",
@@ -1026,8 +1000,8 @@ with tabs[4]:
     }
 
     if st.button("Prever Qualidade da Alimentação"):
-        resultado = model_new.predict([input_data])[0]
-        probabilidade = model_new.predict_proba([input_data]).max()
+        resultado = modelo.predict([input_data])[0]
+        probabilidade = modelo.predict_proba([input_data]).max()
 
         st.success(f"🍽️ O modelo previu a qualidade da alimentação como: **{mapping_alimentos_reverse[resultado]}**")
         st.write(f"Confiança da predição: {probabilidade:.2%}")
